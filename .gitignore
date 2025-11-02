@@ -45,3 +45,8 @@ htmlcov/
 
 # Logs
 *.log
+
+# FreshBooks token files
+.freshbooks_token
+~/.freshbooks_token
+*.freshbooks_token
