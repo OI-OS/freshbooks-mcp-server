@@ -36,28 +36,38 @@ Small business accounting software
 - Full error handling and retry logic
 - Async support for better performance
 
+## Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package manager)
+- FreshBooks account with API access
+
 ## Installation
 
-```bash
-pip install freshbooks-mcp-server
-```
+### Install from Source
 
-Or install from source:
-
+1. Clone this repository:
 ```bash
 git clone https://github.com/OI-OS/freshbooks-mcp-server.git
 cd freshbooks-mcp-server
+```
+
+2. Install dependencies:
+```bash
 pip install -e .
 ```
 
-## Configuration
+Or install dependencies directly:
+```bash
+pip install httpx pydantic pydantic-settings python-dotenv mcp
+```
 
-1. Copy `.env.example` to `.env`:
+3. Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-2. Fill in your FreshBooks credentials in `.env`:
+4. Configure your FreshBooks credentials in `.env`:
    - `FRESHBOOKS_API_TOKEN` - Your FreshBooks API token (for simple authentication)
    - `FRESHBOOKS_BUSINESS_ID` - Your FreshBooks business ID (for simple authentication)
    - `FRESHBOOKS_CLIENT_ID` - Your OAuth client ID (for OAuth authentication)
@@ -65,17 +75,237 @@ cp .env.example .env
 
 **Note:** Never commit your `.env` file or token files to version control. They are already excluded in `.gitignore`.
 
+## Configuration for AI Clients
+
+### Using with Cursor
+
+1. Open Cursor settings
+2. Navigate to **Features** → **Model Context Protocol**
+3. Click **Edit Config** or manually edit your MCP settings file:
+   - **macOS/Linux**: `~/.cursor/mcp.json` or project-level `.cursor/mcp.json`
+   - **Windows**: `%APPDATA%\Cursor\mcp.json` or project-level `.cursor\mcp.json`
+
+4. Add the FreshBooks MCP server configuration:
+
+```json
+{
+  "mcpServers": {
+    "freshbooks": {
+      "command": "python3",
+      "args": ["/absolute/path/to/freshbooks-mcp-server/src/freshbooks_mcp/server.py"],
+      "env": {
+        "FRESHBOOKS_API_TOKEN": "your_freshbooks_api_token_here",
+        "FRESHBOOKS_BUSINESS_ID": "your_business_id_here"
+      }
+    }
+  }
+}
+```
+
+**For OAuth authentication**, use:
+```json
+{
+  "mcpServers": {
+    "freshbooks-oauth": {
+      "command": "python3",
+      "args": ["/absolute/path/to/freshbooks-mcp-server/src/freshbooks_mcp/simple_oauth_server.py"],
+      "env": {
+        "FRESHBOOKS_CLIENT_ID": "your_oauth_client_id_here",
+        "FRESHBOOKS_CLIENT_SECRET": "your_oauth_client_secret_here"
+      }
+    }
+  }
+}
+```
+
+**Alternative: Using project-level configuration**
+
+Create `.cursor/mcp.json` in your project root:
+```json
+{
+  "mcpServers": {
+    "freshbooks": {
+      "command": "python3",
+      "args": ["./MCP-servers/freshbooks-mcp-server/src/freshbooks_mcp/server.py"],
+      "env": {
+        "FRESHBOOKS_API_TOKEN": "${FRESHBOOKS_API_TOKEN}",
+        "FRESHBOOKS_BUSINESS_ID": "${FRESHBOOKS_BUSINESS_ID}"
+      }
+    }
+  }
+}
+```
+
+5. Restart Cursor to apply changes
+
+### Using with Claude Desktop
+
+1. Locate your Claude Desktop configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+   - **Linux**: `~/.config/claude/claude_desktop_config.json`
+
+2. Edit the configuration file and add:
+
+```json
+{
+  "mcpServers": {
+    "freshbooks": {
+      "command": "python3",
+      "args": ["/absolute/path/to/freshbooks-mcp-server/src/freshbooks_mcp/server.py"],
+      "env": {
+        "FRESHBOOKS_API_TOKEN": "your_freshbooks_api_token_here",
+        "FRESHBOOKS_BUSINESS_ID": "your_business_id_here"
+      }
+    }
+  }
+}
+```
+
+3. Save the file and restart Claude Desktop
+
+### Using with VS Code (with MCP Extension)
+
+1. Install an MCP extension for VS Code (if available)
+2. Create or edit `.vscode/mcp.json` in your project:
+
+```json
+{
+  "servers": {
+    "freshbooks": {
+      "command": "python3",
+      "args": ["/absolute/path/to/freshbooks-mcp-server/src/freshbooks_mcp/server.py"],
+      "env": {
+        "FRESHBOOKS_API_TOKEN": "your_freshbooks_api_token_here",
+        "FRESHBOOKS_BUSINESS_ID": "your_business_id_here"
+      },
+      "type": "stdio"
+    }
+  }
+}
+```
+
+### Using with Continue.dev
+
+1. Open your Continue.dev configuration file:
+   - Location: `~/.continue/config.json` (or `%USERPROFILE%\.continue\config.json` on Windows)
+
+2. Add to the `mcpServers` array:
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "freshbooks",
+      "command": "python3",
+      "args": ["/absolute/path/to/freshbooks-mcp-server/src/freshbooks_mcp/server.py"],
+      "env": {
+        "FRESHBOOKS_API_TOKEN": "your_freshbooks_api_token_here",
+        "FRESHBOOKS_BUSINESS_ID": "your_business_id_here"
+      }
+    }
+  ]
+}
+```
+
+3. Restart Continue.dev
+
+## Server Variants
+
+This repository includes multiple server implementations:
+
+1. **Standard Server** (`src/freshbooks_mcp/server.py`) - Uses MCP SDK with simple API token authentication
+2. **OAuth Server** (`src/freshbooks_mcp/oauth_server.py`) - Full OAuth flow with token refresh
+3. **Simple OAuth Server** (`src/freshbooks_mcp/simple_oauth_server.py`) - Simplified OAuth with interactive authentication
+4. **Raw MCP Server** (`mcp_server.py`) - Direct MCP protocol implementation
+5. **Simple Server** (`simple_server.py`) - Minimal implementation for testing
+
+Choose the server that best fits your authentication needs.
+
 ## Quick Start
 
-```python
-from freshbooks_mcp import FreshbooksMCPServer
+To test the server manually:
 
-# Initialize the server
-server = FreshbooksMCPServer()
+```bash
+# Using the standard server
+python3 src/freshbooks_mcp/server.py
 
-# Start the server
-server.start()
+# Or using the run script
+python3 run_server.py
 ```
+
+The server communicates via stdio (standard input/output) for MCP protocol.
+
+## Available Tools
+
+Once configured, the following FreshBooks tools will be available to your AI assistant:
+
+### Read Operations
+- **`get_clients`** - Get all clients from your FreshBooks account
+- **`get_invoices`** - Retrieve all invoices
+- **`get_projects`** - Get all projects
+- **`get_expenses`** - Retrieve all expenses
+- **`get_time_entries`** - Get all time tracking entries
+
+### Write Operations (OAuth Server Only)
+- **`create_client`** - Create a new client in FreshBooks
+- **`create_invoice`** - Create a new invoice
+- **`create_project`** - Create a new project
+
+### OAuth-Specific Tools (OAuth Server)
+- **`authenticate`** - Start the OAuth authentication flow (opens browser for authorization)
+
+## Troubleshooting
+
+### Server Not Appearing in Cursor/Claude
+
+1. **Check Python path**: Ensure `python3` is in your PATH. Test with:
+   ```bash
+   which python3  # macOS/Linux
+   where python3  # Windows
+   ```
+
+2. **Verify absolute paths**: Use absolute paths in your MCP configuration. Relative paths may not work.
+
+3. **Check environment variables**: Ensure your FreshBooks credentials are correctly set in the `env` section of your MCP configuration.
+
+4. **Restart the client**: After making configuration changes, fully restart Cursor, Claude Desktop, or your AI client.
+
+5. **Check logs**: Look for error messages in:
+   - Cursor: View → Output → select "Model Context Protocol"
+   - Claude Desktop: Check application logs
+
+### Authentication Issues
+
+- **API Token**: Ensure your `FRESHBOOKS_API_TOKEN` is valid and has proper permissions
+- **Business ID**: Verify your `FRESHBOOKS_BUSINESS_ID` matches your FreshBooks account
+- **OAuth**: For OAuth servers, ensure your `FRESHBOOKS_CLIENT_ID` and `FRESHBOOKS_CLIENT_SECRET` are correct
+
+### Python Module Not Found
+
+If you get "ModuleNotFoundError", install dependencies:
+```bash
+cd /path/to/freshbooks-mcp-server
+pip install -e .
+```
+
+## Getting FreshBooks API Credentials
+
+1. **API Token Authentication**:
+   - Log in to your FreshBooks account
+   - Go to Settings → Integrations → API
+   - Generate an API token
+   - Note your Business/Account ID
+
+2. **OAuth Authentication**:
+   - Visit [FreshBooks Developer Portal](https://www.freshbooks.com/api/authentication)
+   - Create a new OAuth application
+   - Set redirect URI: `https://localhost:8080/callback`
+   - Copy Client ID and Client Secret
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
