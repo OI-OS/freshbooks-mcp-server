@@ -75,6 +75,198 @@ cp .env.example .env
 
 **Note:** Never commit your `.env` file or token files to version control. They are already excluded in `.gitignore`.
 
+## AI Installation Guide (OI OS / Brain Trust 4)
+
+This section provides step-by-step instructions for AI assistants to install and configure the FreshBooks MCP server in OI OS environments.
+
+### Step 1: Install via OI Command
+
+```bash
+./oi install https://github.com/OI-OS/freshbooks-mcp-server.git
+```
+
+The installation will:
+- Clone the repository to `MCP-servers/freshbooks-mcp-server/`
+- Install Python dependencies
+- Auto-detect the server type
+
+### Step 2: Build and Install Dependencies
+
+```bash
+cd MCP-servers/freshbooks-mcp-server
+pip3 install -e .
+```
+
+### Step 3: Configure OAuth Credentials
+
+Add the following to your project root `.env` file:
+
+```bash
+# FreshBooks OAuth Configuration
+FRESHBOOKS_CLIENT_ID=your_client_id_here
+FRESHBOOKS_CLIENT_SECRET=your_client_secret_here
+FRESHBOOKS_REDIRECT_URI=https://localhost:8080/callback
+
+# FreshBooks Account Information (obtained after authentication)
+FRESHBOOKS_ACCOUNT_ID=your_account_id_here
+FRESHBOOKS_BUSINESS_ID=your_business_id_here
+FRESHBOOKS_BUSINESS_NAME=your_business_name
+FRESHBOOKS_USER_EMAIL=your_email@example.com
+FRESHBOOKS_USER_NAME=Your Name
+```
+
+### Step 4: Connect the Server
+
+Connect the OAuth server variant:
+
+```bash
+export FRESHBOOKS_CLIENT_ID=your_client_id_here
+export FRESHBOOKS_CLIENT_SECRET=your_client_secret_here
+export FRESHBOOKS_REDIRECT_URI=https://localhost:8080/callback
+
+./brain-trust4 connect freshbooks-mcp-server python3 ./MCP-servers/freshbooks-mcp-server/src/freshbooks_mcp/simple_oauth_server.py
+```
+
+### Step 5: Authenticate (First Time)
+
+The OAuth flow requires manual browser interaction. Two methods:
+
+#### Method A: Automatic Authentication (Interactive)
+
+```bash
+./brain-trust4 call freshbooks-mcp-server authenticate '{}'
+```
+
+This will:
+1. Open a browser for OAuth authorization
+2. Wait for user to complete authorization
+3. Exchange authorization code for access token
+4. Save token to `~/.freshbooks_token`
+
+**Note:** This command may timeout if run non-interactively. Use Method B for automation.
+
+#### Method B: Manual Token Exchange
+
+1. **Get Authorization URL:**
+   ```bash
+   # Manually construct or trigger OAuth URL
+   # URL format: https://auth.freshbooks.com/oauth/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=https://localhost:8080/callback
+   ```
+
+2. **User completes authorization in browser** and receives authorization code
+
+3. **Exchange code for access token:**
+   ```bash
+   export FRESHBOOKS_CLIENT_ID=your_client_id_here
+   export FRESHBOOKS_CLIENT_SECRET=your_client_secret_here
+   export FRESHBOOKS_REDIRECT_URI=https://localhost:8080/callback
+   
+   python3 -c "
+   import asyncio
+   import httpx
+   import json
+   import os
+   import time
+   
+   async def exchange_code():
+       client_id = os.getenv('FRESHBOOKS_CLIENT_ID')
+       client_secret = os.getenv('FRESHBOOKS_CLIENT_SECRET')
+       redirect_uri = os.getenv('FRESHBOOKS_REDIRECT_URI')
+       auth_code = 'AUTHORIZATION_CODE_FROM_USER'  # Replace with actual code
+       
+       async with httpx.AsyncClient() as client:
+           response = await client.post(
+               'https://api.freshbooks.com/auth/oauth/token',
+               data={
+                   'grant_type': 'authorization_code',
+                   'client_id': client_id,
+                   'client_secret': client_secret,
+                   'redirect_uri': redirect_uri,
+                   'code': auth_code
+               },
+               headers={'Content-Type': 'application/x-www-form-urlencoded'}
+           )
+           result = response.json()
+           print('Access Token:', result['access_token'])
+           print('Account ID:', result['account_id'])
+           print('Business ID:', result['business_id'])
+           return result
+   
+   result = asyncio.run(exchange_code())
+   "
+   ```
+
+4. **Save token to `~/.freshbooks_token`:**
+   ```bash
+   python3 -c "
+   import json
+   import time
+   import os
+   
+   token_data = {
+       'access_token': 'ACCESS_TOKEN_FROM_STEP_3',
+       'account_id': 'ACCOUNT_ID_FROM_STEP_3',
+       'business_id': 'BUSINESS_ID_FROM_STEP_3',
+       'timestamp': time.time()
+   }
+   
+   token_file = os.path.expanduser('~/.freshbooks_token')
+   with open(token_file, 'w') as f:
+       json.dump(token_data, f)
+   
+   print('✅ Token saved to', token_file)
+   "
+   ```
+
+5. **Optional: Save as FRESHBOOKS_API_TOKEN**
+
+   The OAuth access token can also be used as `FRESHBOOKS_API_TOKEN` for the standard server. Add to `.env`:
+
+   ```bash
+   FRESHBOOKS_API_TOKEN=your_oauth_access_token_here
+   FRESHBOOKS_BUSINESS_ID=your_business_id_here
+   ```
+
+   **Important:** OAuth tokens expire in ~12 hours. The OAuth server automatically handles token refresh, while the standard server will need manual token updates.
+
+### Step 6: Verify Installation
+
+Test the connection:
+
+```bash
+./oi "get freshbooks clients"
+```
+
+Or directly:
+
+```bash
+./brain-trust4 call freshbooks-mcp-server get_clients '{}'
+```
+
+### Troubleshooting for AI Installations
+
+- **"Not authenticated" error**: Run authentication flow (Step 5)
+- **Token expired**: Re-authenticate or use OAuth server which auto-refreshes
+- **Environment variables not found**: Export them before connecting server, or add to `.env` and source it
+- **Module not found**: Ensure `pip3 install -e .` completed successfully in the server directory
+
+### Quick Reference Commands
+
+```bash
+# Install
+./oi install https://github.com/OI-OS/freshbooks-mcp-server.git
+
+# Connect OAuth server
+export FRESHBOOKS_CLIENT_ID=... FRESHBOOKS_CLIENT_SECRET=... FRESHBOOKS_REDIRECT_URI=...
+./brain-trust4 connect freshbooks-mcp-server python3 ./MCP-servers/freshbooks-mcp-server/src/freshbooks_mcp/simple_oauth_server.py
+
+# Connect standard server (if you have API token)
+./brain-trust4 connect freshbooks-api python3 ./MCP-servers/freshbooks-mcp-server/src/freshbooks_mcp/server.py
+
+# Test
+./oi "get freshbooks clients"
+```
+
 ## Configuration for AI Clients
 
 ### Using with Cursor
