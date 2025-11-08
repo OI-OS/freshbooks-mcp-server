@@ -1,5 +1,7 @@
 # FreshBooks MCP Server
 
+> **⚠️ For AI Agents:** This repository includes an [OI.md](OI.md) file with comprehensive installation and configuration instructions specifically designed for AI agents installing this server in OI OS (Brain Trust 4) environments. Please refer to [OI.md](OI.md) for step-by-step setup instructions, intent mappings, parameter rules, and troubleshooting guidance.
+
 <div align="center">
 
 # Freshbooks Mcp Server
