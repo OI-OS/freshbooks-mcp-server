@@ -1,0 +1,358 @@
+{
+  "server_name": "freshbooks-mcp-server",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "keyword": "freshbooks authenticate",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks auth",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks login",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get identity",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks identity",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks whoami",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create project",
+      "tool_name": "create_project",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add project",
+      "tool_name": "create_project",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new project",
+      "tool_name": "create_project",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks authenticate",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks auth",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks login",
+      "tool_name": "authenticate",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get identity",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks identity",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks whoami",
+      "tool_name": "get_identity",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show clients",
+      "tool_name": "get_clients",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show invoices",
+      "tool_name": "get_invoices",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show projects",
+      "tool_name": "get_projects",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show expenses",
+      "tool_name": "get_expenses",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks get time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks list time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks show time entries",
+      "tool_name": "get_time_entries",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new client",
+      "tool_name": "create_client",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new invoice",
+      "tool_name": "create_invoice",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks create project",
+      "tool_name": "create_project",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks add project",
+      "tool_name": "create_project",
+      "priority": 10
+    },
+    {
+      "keyword": "freshbooks new project",
+      "tool_name": "create_project",
+      "priority": 10
+    }
+  ],
+  "parameter_extractors": {},
+  "reminder_message": "freshbooks-mcp-server MCP server. See OI.md for installation and configuration details."
+}
